@@ -3,14 +3,14 @@ import { Socket } from 'socket.io-client';
 
 interface Props {
   fetchingInterval: number;
-  setInterval: (interval: number) => void;
-  socket: Socket;
+  changeInterval: (interval: number) => void;
+  socket: Socket | null;
 }
 
 const IntervalField: React.FC<Props> = ({
-  fetchingInterval,
-  setInterval,
   socket,
+  fetchingInterval,
+  changeInterval,
 }) => {
   const [isValid, setIsValid] = useState<boolean>(true);
   const [inputValue, setInputValue] = useState<string>('');
@@ -35,10 +35,10 @@ const IntervalField: React.FC<Props> = ({
 
     if (isValid) {
       const intevalInMs: number = Number(inputValue) * 1000;
-      socket.emit('changeInterval', { interval: intevalInMs });
+      if (socket) socket.emit('changeInterval', { interval: intevalInMs });
       setIsValid(true);
       setInputValue('');
-      setInterval(Number(inputValue));
+      changeInterval(Number(inputValue));
       return;
     } else {
       setIsValid(false);

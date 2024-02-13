@@ -11,13 +11,15 @@ interface Props {
 }
 
 const CompanyList: React.FC<Props> = ({ type, fetchingInterval }) => {
-  const getCompanies = (state: RootState) => state.items.companies;
-  const getWatchList = (state: RootState) => state.items.watchlist;
-  const isListGeneral: boolean = type === 'general';
-
-  const listToMap: ICompany[] = useAppSelector(
-    isListGeneral ? getCompanies : getWatchList
+  const companies = useAppSelector((state: RootState) => state.items.companies);
+  const fetchedWatchlist = useAppSelector(
+    (state: RootState) => state.items.watchlist
   );
+  const watchList = companies.filter(company => {
+    return fetchedWatchlist.some(watchTicker => watchTicker === company.ticker);
+  });
+  const isListGeneral: boolean = type === 'general';
+  const listToMap: ICompany[] = isListGeneral ? companies : watchList;
   const title: string = isListGeneral ? 'General List' : 'Watch List';
 
   const renderList: Function = (): ReactNode => {
