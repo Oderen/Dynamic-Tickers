@@ -29,7 +29,7 @@ const Company: React.FC<Props> = ({ company, index, isListGeneral }) => {
   const dispatch = useAppDispatch();
 
   const [btnText, setBtnText] = useState<React.ReactNode | string>(null);
-  const watchList: string[] = useAppSelector(state => state.items.watchlist);
+  const watchList: ICompany[] = useAppSelector(state => state.items.watchlist);
 
   const {
     price,
@@ -45,7 +45,7 @@ const Company: React.FC<Props> = ({ company, index, isListGeneral }) => {
   const shouldItemChangeBgColor: boolean = index % 2 === 0;
   const dynamicPriceColor: IDynamicColor = { color };
   const isItemInWatchList: boolean = watchList.some(
-    ticker => ticker === company.ticker
+    el => el.ticker === company.ticker
   );
   const tickerColors: string[] = [
     '#737373',
@@ -58,8 +58,7 @@ const Company: React.FC<Props> = ({ company, index, isListGeneral }) => {
 
   const editWatchList: Function = (): void => {
     if (isListGeneral) {
-      console.log('click');
-      dispatch(addToWatchList(company.ticker));
+      dispatch(addToWatchList(company));
     } else {
       dispatch(deleteFromWatchList(company.ticker));
     }

@@ -10,7 +10,7 @@ import {
 
 interface CompaniesState {
   companies: ICompany[];
-  watchlist: string[];
+  watchlist: ICompany[];
   isLoading: boolean;
   error: null | string;
 }
@@ -59,15 +59,18 @@ const companySlice = createSlice({
         state.companies = modifyData;
       })
       .addCase(addToWatchList.fulfilled, (state, { payload }) => {
-        if (state.watchlist.some(ticker => ticker === payload)) {
+        if (
+          state.watchlist.some(company => company.ticker === payload.ticker)
+        ) {
           state.watchlist = [...state.watchlist];
         } else {
           state.watchlist = [...state.watchlist, payload];
         }
       })
+
       .addCase(deleteFromWatchList.fulfilled, (state, { payload }) => {
         const filteredArray = Array.from(state.watchlist).filter(
-          ticker => ticker !== payload
+          company => company.ticker !== payload
         );
 
         state.watchlist = filteredArray;
