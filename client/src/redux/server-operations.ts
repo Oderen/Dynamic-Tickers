@@ -14,9 +14,9 @@ export const getCompanies = createAsyncThunk<ICompany[], ICompany[]>(
 
 export const addToWatchList = createAsyncThunk(
   'companies/addToWatch',
-  async (company: ICompany) => {
+  async (ticker: string) => {
     try {
-      return company;
+      return ticker;
     } catch (err: any) {
       throw new Error(err.message);
     }

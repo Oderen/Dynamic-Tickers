@@ -10,7 +10,7 @@ import {
 
 interface CompaniesState {
   companies: ICompany[];
-  watchlist: ICompany[];
+  watchlist: string[];
   isLoading: boolean;
   error: null | string;
 }
@@ -40,7 +40,7 @@ const companySlice = createSlice({
           modifyData = [...payload].map((el, idx) => {
             const prevTime = takeOutTime(state.companies[idx].last_trade_time);
             const currentTime = takeOutTime(el.last_trade_time);
-             const timeDifference =
+            const timeDifference =
               findTimeDifference(prevTime, currentTime) < 0
                 ? 'n/a'
                 : findTimeDifference(prevTime, currentTime);
@@ -59,18 +59,15 @@ const companySlice = createSlice({
         state.companies = modifyData;
       })
       .addCase(addToWatchList.fulfilled, (state, { payload }) => {
-        if (
-          state.watchlist.some(company => company.ticker === payload.ticker)
-        ) {
+        if (state.watchlist.some(ticker => ticker === payload)) {
           state.watchlist = [...state.watchlist];
         } else {
           state.watchlist = [...state.watchlist, payload];
         }
       })
-
       .addCase(deleteFromWatchList.fulfilled, (state, { payload }) => {
         const filteredArray = Array.from(state.watchlist).filter(
-          company => company.ticker !== payload
+          ticker => ticker !== payload
         );
 
         state.watchlist = filteredArray;
