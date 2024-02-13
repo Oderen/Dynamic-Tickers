@@ -40,6 +40,10 @@ const companySlice = createSlice({
           modifyData = [...payload].map((el, idx) => {
             const prevTime = takeOutTime(state.companies[idx].last_trade_time);
             const currentTime = takeOutTime(el.last_trade_time);
+             const timeDifference =
+              findTimeDifference(prevTime, currentTime) < 0
+                ? 'n/a'
+                : findTimeDifference(prevTime, currentTime);
 
             return {
               ...el,
@@ -47,7 +51,7 @@ const companySlice = createSlice({
                 Number(el.change) > Number(state.companies[idx].change)
                   ? 'green'
                   : 'red',
-              lastTradeDiff: findTimeDifference(prevTime, currentTime),
+              lastTradeDiff: timeDifference,
             };
           });
         }
